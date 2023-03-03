@@ -1,18 +1,49 @@
-const {expect} = require('chai');
-
-function batteryIsOk(temperature, soc, charge_rate) {
-    if (temperature < 0 || temperature > 45) {
-        console.log('Temperature is out of range!');
-        return false;
-    } else if (soc < 20 || soc > 80) {
-        console.log('State of Charge is out of range!')
-        return false;
-    } else if (charge_rate > 0.8) {
-        console.log('Charge rate is out of range!');
-        return false;
+function checkRange(val, min, max){
+    if(val<min){
+        return {outOfRange: true, breachType:"low"};
+    } else if(val>max){
+        return { outOfRange: true, breachType: "high" };
+    } else{
+        return {outOfRange: false};
     }
-    return true;
 }
 
-expect(batteryIsOk(25, 70, 0.7)).to.be.true;
-expect(batteryIsOk(50, 85, 0)).to.be.false;
+function checkTemperatureRange(temperature){
+    return checkRange(temperature, 0, 45);
+}
+function checkSocRange(soc){
+    return checkRange(soc, 20, 80);
+}
+function checkChargeRateRange(charge_rate){
+    return checkRange(charge_rate, 0, 0.8);
+}
+
+function batteryIsOk(temperature, soc, charge_rate){
+    let isBatteryOk = true;
+
+    const checkTemperature = checkTemperatureRange(temperature);
+    if(checkTemperature.outOfRange){
+        console.log(`Temperature is ${checkTemperature.breachType} !!`);
+        isBatteryOk = false;
+    }
+
+    const checkSoc = checkSocRange(soc);
+    if(checkSoc.outOfRange){
+        console.log(`State of charge is ${checkSoc.breachType} !!`);
+        isBatteryOk = false;
+    }
+
+    const checkChargeRate = checkChargeRateRange(charge_rate);
+    if(checkChargeRate.outOfRange){
+        console.log(`Charge rate is ${checkChargeRate.breachType} !!`);
+        isBatteryOk = false;
+    }
+
+    if(isBatteryOk){
+        console.log("Battery is OK!")
+    }
+    return isBatteryOk;
+
+}
+
+module.exports = {batteryIsOk};
