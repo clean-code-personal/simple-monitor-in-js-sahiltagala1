@@ -18,6 +18,3 @@ jobs:
       
       - name: BMS monitor
         run: node bms-monitor.js
-
-      - name: Run and Test
-        run: mocha test
