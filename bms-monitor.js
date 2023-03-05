@@ -1,47 +1,31 @@
-function checkRange(val, min, max) {
-  if (val < min) {
-    return { outOfRange: true, breachType: "low" };
-  } else if (val > max) {
-    return { outOfRange: true, breachType: "high" };
-  } else {
-    return { outOfRange: false };
+function inRange(val, min, max) {
+  if(val<min || val>max){
+    return false;
+  } else{
+    return true;
   }
 }
 
 function checkTemperatureRange(temperature) {
-  return checkRange(temperature, 0, 45);
+  return inRange(temperature, 0, 45);
 }
 function checkSocRange(soc) {
-  return checkRange(soc, 20, 80);
+  return inRange(soc, 20, 80);
 }
 function checkChargeRateRange(charge_rate) {
-  return checkRange(charge_rate, 0, 0.8);
+  return inRange(charge_rate, 0, 0.8);
+}
+
+function check(parameters){
+  return parameters;
 }
 
 function batteryIsOk(temperature, soc, charge_rate) {
-  let isBatteryOk = true;
-
-  const checkTemperature = checkTemperatureRange(temperature);
-  if (checkTemperature.outOfRange) {
-    console.log(`Temperature is ${checkTemperature.breachType} !!`);
-    isBatteryOk = false;
-  }
-
-  const checkSoc = checkSocRange(soc);
-  if (checkSoc.outOfRange) {
-    console.log(`State of charge is ${checkSoc.breachType} !!`);
-    isBatteryOk = false;
-  }
-
-  const checkChargeRate = checkChargeRateRange(charge_rate);
-  if (checkChargeRate.outOfRange) {
-    console.log(`Charge rate is ${checkChargeRate.breachType} !!`);
-    isBatteryOk = false;
-  }
-
-  if (isBatteryOk) {
-    console.log("Battery is OK!");
-  }
+  let temperatureValue = checkTemperatureRange(temperature);
+  let socValue = checkSocRange(soc);
+  let chargeRateValue = checkChargeRateRange(charge_rate);
+  const parameters = [temperatureValue, socValue, chargeRateValue];
+  let isBatteryOk = parameters.every(check);
   return isBatteryOk;
 }
 
