@@ -8,19 +8,9 @@ function checkRange(val, min, max) {
   }
 }
 
-function checkTemperatureRange(temperature) {
-  const res = checkRange(temperature, 0, 45);
-  console.log(`Temperature Breach-type: ${res.breachType}`);
-  return res;
-}
-function checkSocRange(soc) {
-  const res = checkRange(soc, 20, 80);
-  console.log(`SOC Breach-type: ${res.breachType}`);
-  return res;
-}
-function checkChargeRateRange(charge_rate) {
-  const res = checkRange(charge_rate, 0, 0.8);
-  console.log(`Charge Rate Breach-type: ${res.breachType}`);
+function classifyParametersBreach(paramName, paramVal, lowerLimit, upperLimit){
+  const res = checkRange(paramVal, lowerLimit, upperLimit);
+  console.log(`${paramName} breach-type: ${res.breachType}`);
   return res;
 }
 
@@ -29,16 +19,13 @@ function check(parameters) {
 }
 
 function batteryIsOk(temperature, soc, charge_rate) {
-  let temperatureValue = checkTemperatureRange(temperature);
-  let socValue = checkSocRange(soc);
-  let chargeRateValue = checkChargeRateRange(charge_rate);
-  const parameters = [
-    temperatureValue.inRange,
-    socValue.inRange,
-    chargeRateValue.inRange,
-  ];
+
+  let temperatureValue = classifyParametersBreach("Temperature", temperature, 0, 45);
+  let socValue = classifyParametersBreach("SOC", soc, 20, 80);
+  let chargeRateValue = classifyParametersBreach("Charge Rate", charge_rate, 0, 0.8);
+  const parameters = [temperatureValue.inRange, socValue.inRange, chargeRateValue.inRange];
   let isBatteryOk = parameters.every(check);
   return isBatteryOk;
 }
 
-module.exports = { batteryIsOk, checkRange };
+module.exports = { batteryIsOk };
