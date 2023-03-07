@@ -3,29 +3,53 @@ const { it } = require("mocha");
 const { batteryIsOk } = require("../bms-monitor");
 
 describe("Test cases to check Battery", function () {
-  it("Temperature is high", function () {
+  it("Temperature breach high", function () {
     const result = batteryIsOk(50, 70, 0.7);
     expect(result).equal(false);
   });
-  it("Temperature is low", function () {
+  it("Temperature breach low", function () {
     const result = batteryIsOk(-5, 70, 0.7);
     expect(result).equal(false);
   });
-  it("State of charge is low", function () {
+  it("Temperature warning high", function () {
+    const result = batteryIsOk(43, 70, 0.7);
+    expect(result).equal(true);
+  });
+  it("Temperature warning low", function () {
+    const result = batteryIsOk(2.1, 70, 0.7);
+    expect(result).equal(true);
+  });
+  it("SOC breach low", function () {
     const result = batteryIsOk(25, 10, 0.7);
     expect(result).equal(false);
   });
-  it("State of charge is high", function () {
+  it("SOC breach high", function () {
     const result = batteryIsOk(25, 90, 0.7);
     expect(result).equal(false);
   });
-  it("Charge rate is low", function () {
+  it("SOC warning low", function () {
+    const result = batteryIsOk(25, 22, 0.7);
+    expect(result).equal(true);
+  });
+  it("SOC warning high", function () {
+    const result = batteryIsOk(25, 76, 0.7);
+    expect(result).equal(true);
+  });
+  it("Charge-rate breach low", function () {
     const result = batteryIsOk(25, 70, -0.1);
     expect(result).equal(false);
   });
-  it("Charge rate is high", function () {
+  it("Charge-rate breach high", function () {
     const result = batteryIsOk(25, 70, 0.9);
     expect(result).equal(false);
+  });
+  it("Charge-rate warning low", function () {
+    const result = batteryIsOk(25, 70, 0.03);
+    expect(result).equal(true);
+  });
+  it("Charge-rate warning high", function () {
+    const result = batteryIsOk(25, 70, 0.76);
+    expect(result).equal(true);
   });
   it("All parameters are OK", function () {
     const result = batteryIsOk(25, 70, 0.7);
