@@ -14,7 +14,7 @@ function checkRange(val, min, max) {
 function checkWarning(val, min, max, tolerance){
   const upperWarningLimit = max - (max * tolerance);
   const lowerWarningLimit = min + (max * tolerance);
-  
+
   const rangeClassifications = [
     {
       range: val >= min && val <= lowerWarningLimit,
@@ -25,16 +25,12 @@ function checkWarning(val, min, max, tolerance){
       range: val <= max && val >= upperWarningLimit,
       warningType: "HIGH",
       isWarning: true,
-    },
-    {
-      range: val > lowerWarningLimit && val < upperWarningLimit,
-      isWarning: false,
-    },
+    }
   ];
 
   const matchedClassification = rangeClassifications.find(({ range }) => range);
 
-  return matchedClassification;
+  return matchedClassification ? matchedClassification : {isWarning:false};
 
 }
 
