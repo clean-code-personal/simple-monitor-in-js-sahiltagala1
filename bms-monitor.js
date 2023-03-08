@@ -13,13 +13,14 @@ function checkRange(val, min, max) {
 function checkWarning(val, min, max, tolerance){
   const upperWarningLimit = max - (max * tolerance);
   const lowerWarningLimit = min + (max * tolerance);
-  if(val>=min && val<=lowerWarningLimit){
-    return {isWarning:true, warningType:"low"};
-  } else if(val<=max && val>=upperWarningLimit){
-    return {isWarning:true, warningType:"high"};
-  }else{
-    return {isWarning:false};
-  }
+  
+  const conditions = {
+    [val>=min && val<=lowerWarningLimit]: {isWarning:true, warningType:"low"},
+    [val<=max && val>=upperWarningLimit]: {isWarning:true, warningType:"high"},
+    [true]: {isWarning:false}
+  };
+  
+  return conditions[true];
 }
 
 function classifyParameters(
