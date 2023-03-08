@@ -17,12 +17,12 @@ function checkWarning(val, min, max, tolerance){
 
   const rangeClassifications = [
     {
-      range: val >= min && val <= lowerWarningLimit,
+      range: val <= lowerWarningLimit,
       warningType: "LOW",
       isWarning: true,
     },
     {
-      range: val <= max && val >= upperWarningLimit,
+      range: val >= upperWarningLimit,
       warningType: "HIGH",
       isWarning: true,
     }
