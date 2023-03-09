@@ -1,37 +1,36 @@
-const lang = require('./language');
+const lang = require("./language");
 const tolerance = 0.05;
 
 function checkRange(val, min, max) {
   if (val < min) {
-    return { inRange: false, breachType: "LOW" };
+    return { inRange: false, breachType: lang.low };
   } else if (val > max) {
-    return { inRange: false, breachType: "HIGH" };
+    return { inRange: false, breachType: lang.high };
   } else {
     return { inRange: true };
   }
 }
 
-function checkWarning(val, min, max, tolerance){
-  const upperWarningLimit = max - (max * tolerance);
-  const lowerWarningLimit = min + (max * tolerance);
+function checkWarning(val, min, max, tolerance) {
+  const upperWarningLimit = max - max * tolerance;
+  const lowerWarningLimit = min + max * tolerance;
 
   const rangeClassifications = [
     {
       range: val <= lowerWarningLimit,
-      warningType: "LOW",
+      warningType: lang.low,
       isWarning: true,
     },
     {
       range: val >= upperWarningLimit,
-      warningType: "HIGH",
+      warningType: lang.high,
       isWarning: true,
-    }
+    },
   ];
 
   const matchedClassification = rangeClassifications.find(({ range }) => range);
 
-  return matchedClassification ? matchedClassification : {isWarning:false};
-
+  return matchedClassification ? matchedClassification : { isWarning: false };
 }
 
 function classifyParameters(
@@ -44,17 +43,15 @@ function classifyParameters(
   const res_range = checkRange(paramVal, lowerLimit, upperLimit);
   const res_warning = checkWarning(paramVal, lowerLimit, upperLimit, tolerance);
   if (!res_range.inRange) {
-    console.log(`${paramName} breach-type: ${res_range.breachType}`);
+    console.log(`${paramName} ${lang.breachType(res_range.breachType)}`);
     return res_range.inRange;
-  } else if(res_warning.isWarning){
-    console.log(`${paramName} warning-type: ${res_warning.warningType}`);
+  } else if (res_warning.isWarning) {
+    console.log(`${paramName} ${lang.warningType(res_warning.warningType)}`);
     return true;
-  } else{
-    console.log(`${paramName} is Normal`);
+  } else {
+    console.log(`${paramName} ${lang.normal}`);
     return true;
   }
-
-
 }
 
 function check(parameters) {
@@ -63,15 +60,15 @@ function check(parameters) {
 
 function batteryIsOk(temperature, soc, chargeRate) {
   let temperatureValue = classifyParameters(
-    "Temperature",
+    lang.temperature,
     temperature,
     0,
     45,
     tolerance
   );
-  let socValue = classifyParameters("SOC", soc, 20, 80, tolerance);
+  let socValue = classifyParameters(lang.soc, soc, 20, 80, tolerance);
   let chargeRateValue = classifyParameters(
-    "Charge Rate",
+    lang.chargeRate,
     chargeRate,
     0,
     0.8,
