@@ -1,4 +1,5 @@
 const lang = require("./language");
+const convertToCelsius = require("./unitConversion");
 const tolerance = 0.05;
 
 function checkRange(val, min, max) {
@@ -58,7 +59,10 @@ function check(parameters) {
   return parameters;
 }
 
-function batteryIsOk(temperature, soc, chargeRate) {
+function batteryIsOk(temperature, tempUnit, soc, chargeRate) {
+
+  temperature = convertToCelsius(temperature, tempUnit);
+
   let temperatureValue = classifyParameters(
     lang.temperature,
     temperature,

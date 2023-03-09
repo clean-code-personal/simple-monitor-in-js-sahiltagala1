@@ -50,6 +50,6 @@ const messages = {
     chargeRate: "ರಿಚರ್ಜ್ ದರ",
   },
 };
-const lang= 'hi';
+const lang= 'en';
 
 module.exports=messages[lang];
